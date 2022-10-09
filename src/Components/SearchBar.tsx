@@ -1,0 +1,102 @@
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { getWeather } from "../Api";
+import LeftSideBar from "./LeftSideBar";
+import styled from 'styled-components';
+
+interface Props {
+    getCurrentLocationWeather: () => Promise<void>;
+    setIsSearchOpen: (isOpen: boolean) => void;
+}
+
+const SearchBar: React.FunctionComponent<Props> = ({setIsSearchOpen}) => {
+
+    const [data, setData] = useState({})
+    const [location, setLocation] = useState('')
+
+    const searchLocation = (eventKey: string) => {
+        if (eventKey === 'Enter') {
+            getWeather(location)
+            .then((response) => {
+            setData(response.data)
+            console.log(response.data)
+          })
+          setLocation('');
+        }
+      }
+
+    //    const getWeatherData = async (location: string): Promise<void> => {
+    //     const weather = await getWeather(location);
+    //     setLocation(weather);
+    //   }
+
+    const SearchMenu = styled.div`
+    width: 30%;
+    height: 100vh;
+    background: #1e213a;
+    position: absolute;
+    top: 0;
+    left: 0;
+    `;
+
+    const CloseBtn = styled.div`
+    margin-top: 20px;
+    margin-right: 53px;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    text-align: right;
+    `;
+
+    const SearchForm = styled.div`
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: space-between;
+    margin: auto;
+    position: relative;
+    `; 
+
+    const SearchInput = styled.input`
+    width: 60%;
+    margin: 45px -2px;
+    height: 48px;
+    background: transparent;
+    border: 1px solid #e7e7eb;
+    color: #fff;
+    padding-left: 50px;
+    font-family: Raleway,sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    `;
+
+    const SearchBtn = styled.button`
+    font-family: Raleway,sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    color: #e7e7eb;
+    padding: 17px 20px;
+    background: #3c47e9;
+    line-height: 15px;
+    margin-left: 10px;
+    cursor: pointer;
+    `;
+
+    return (
+        <>
+        <SearchMenu>
+            <CloseBtn onClick={() => setIsSearchOpen(false)}> x </CloseBtn>
+            <SearchForm>
+              <SearchInput placeholder="search for places" value={location} 
+                onChange = {event => setLocation(event.target.value)} />
+              <SearchBtn>search</SearchBtn>
+            </SearchForm>
+        </SearchMenu>
+        </>
+    )
+}
+
+export default SearchBar;
