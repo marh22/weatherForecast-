@@ -1,34 +1,10 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { getWeather } from "../Api";
-import LeftSideBar from "./LeftSideBar";
 import styled from 'styled-components';
 
 interface Props {
-    getCurrentLocationWeather: () => Promise<void>;
     setIsSearchOpen: (isOpen: boolean) => void;
 }
 
 const SearchBar: React.FunctionComponent<Props> = ({setIsSearchOpen}) => {
-
-    const [data, setData] = useState({})
-    const [location, setLocation] = useState('')
-
-    const searchLocation = (eventKey: string) => {
-        if (eventKey === 'Enter') {
-            getWeather(location)
-            .then((response) => {
-            setData(response.data)
-            console.log(response.data)
-          })
-          setLocation('');
-        }
-      }
-
-    //    const getWeatherData = async (location: string): Promise<void> => {
-    //     const weather = await getWeather(location);
-    //     setLocation(weather);
-    //   }
 
     const SearchMenu = styled.div`
     width: 30%;
@@ -78,24 +54,21 @@ const SearchBar: React.FunctionComponent<Props> = ({setIsSearchOpen}) => {
     font-weight: 600;
     font-size: 16px;
     color: #e7e7eb;
-    padding: 17px 20px;
+    padding: 18px 20px;
     background: #3c47e9;
-    line-height: 15px;
     margin-left: 10px;
     cursor: pointer;
+    border: none;
     `;
 
     return (
-        <>
         <SearchMenu>
             <CloseBtn onClick={() => setIsSearchOpen(false)}> x </CloseBtn>
             <SearchForm>
-              <SearchInput placeholder="search for places" value={location} 
-                onChange = {event => setLocation(event.target.value)} />
+              <SearchInput placeholder="search for places" />
               <SearchBtn>search</SearchBtn>
             </SearchForm>
         </SearchMenu>
-        </>
     )
 }
 

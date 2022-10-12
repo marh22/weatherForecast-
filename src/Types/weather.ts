@@ -18,8 +18,15 @@ export interface ForecastEachDay {
             icon: string,
             code: number
         }
-
     }
+    hour: ForecastHour[];
+}
+
+export interface  ForecastHour{
+    humidity: number;
+    wind_mph: number;
+    vis_miles: number;
+    pressure_mb: number;
 }
 
 export interface Location {
