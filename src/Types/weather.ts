@@ -12,7 +12,10 @@ export interface ForecastEachDay {
     day: {
         avgtemp_c: number,
         avgtemp_f: number,
-        temp: string,
+        maxtemp_c: number,
+        maxtemp_f: number,
+        mintemp_c: number,
+        mintemp_f: number,
         condition: {
             text: string,
             icon: string,

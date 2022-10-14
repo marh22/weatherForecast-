@@ -1,10 +1,12 @@
-import { createStore } from 'redux'
+import { createStore } from 'redux';
 
 const initialState = {
     weatherData: null
 }
 
-function handleState (state = initialState, action: any) {
+ const store = createStore(handleState);
+
+function handleState (state = initialState, action:{type: string, payload: any}) {
     switch (action.type) {
         case 'SET_WEATHER':
             return {
@@ -15,7 +17,5 @@ function handleState (state = initialState, action: any) {
             return state;
     }
 }
-
-const store = createStore(handleState);
 
 export default store;

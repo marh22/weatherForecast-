@@ -1,11 +1,12 @@
 import React from "react";
 import styled from 'styled-components';
 import { GoLocation } from 'react-icons/go';
-import { useSelector, connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 interface Props {
-    getCurrentLocationWeather: () => Promise<void>;
+    getCurrentLocationWeather:() => Promise<void>;
     setIsSearchOpen: (isOpen: boolean) => void;
+    isTempC: boolean;
 }
 
 const Main = styled.div`
@@ -93,14 +94,13 @@ const CurrentLoc = styled.div`
     color: #88869d;
 `;
 
-const LeftSideBar: React.FunctionComponent<Props> = ({ getCurrentLocationWeather, setIsSearchOpen }) => {
+const LeftSideBar: React.FunctionComponent<Props> = ({ setIsSearchOpen, getCurrentLocationWeather, isTempC}) => {
     const [weatherData, setWeatherData] = React.useState<any>(null);
     const weatherDataList = useSelector<any>(state => state.weatherData);
 
     React.useEffect(() => {
         if(weatherDataList != null) {
             setWeatherData(weatherDataList);
-            console.log(weatherData, 'dsts');
         }
     }, [weatherDataList])
 
@@ -114,12 +114,14 @@ const LeftSideBar: React.FunctionComponent<Props> = ({ getCurrentLocationWeather
                     <CurrentLocationBtn className="btn-icon material-icons" onClick={getCurrentLocationWeather}> gps_fixed </CurrentLocationBtn>
                 </SearchLoc>
                 <WeatherImage src={todaysForecast?.day.condition.icon} />
-                <Weather>{todaysForecast?.day.avgtemp_c}<span>°C</span></Weather>
+                {isTempC ? <Weather>{todaysForecast?.day.avgtemp_f}<span>°F</span></Weather>  :
+                    <Weather>{todaysForecast?.day.avgtemp_c}<span>°C</span></Weather>
+                }
                 <Condition>{todaysForecast?.day.condition.text}</Condition>
-                <div><span>Today • </span>{weatherData?.todaysForecast?.date}</div>
+                <div><span>Today • </span>{todaysForecast?.date}</div>
                 <CurrentLoc> <GoLocation /> {weatherData?.location.name} </CurrentLoc>
             </TodaysWeatherData>
         </Main>
     )
 }
-export default connect(state => state)(LeftSideBar); 
+export default LeftSideBar; 
