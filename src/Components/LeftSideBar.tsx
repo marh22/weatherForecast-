@@ -1,17 +1,14 @@
 import React from "react";
-import SearchBar from "./SearchBar";
-import { WeatherDataType as TypesWeatherData, ForecastEachDay, Location } from "../Types/weather";
 import styled from 'styled-components';
-import { GoLocation } from 'react-icons/go'; 
+import { GoLocation } from 'react-icons/go';
+import { useSelector, connect } from 'react-redux';
 
 interface Props {
     getCurrentLocationWeather: () => Promise<void>;
     setIsSearchOpen: (isOpen: boolean) => void;
-    todaysForecast?: ForecastEachDay;
-    currentLocation?: Location;
 }
 
-const Container = styled.div`
+const Main = styled.div`
     background: linear-gradient(rgba(30,33,58,.95),rgba(30,33,58,.95) 0),url(/img/Cloud-background.343e2b41.png);
     background-position: 50% 0;
     background-color: rgba(30,33,58,.95);
@@ -56,6 +53,7 @@ const CurrentLocationBtn = styled.button`
     margin-top: 42px;
     box-shadow: 0 4px 4px rgb(0 0 0 / 25%);
     color: #e7e7eb;
+    cursor: pointer;
 `;
 
 const TodaysWeatherData = styled.div`
@@ -95,23 +93,33 @@ const CurrentLoc = styled.div`
     color: #88869d;
 `;
 
-const LeftSideBar: React.FunctionComponent<Props> = ({ getCurrentLocationWeather, setIsSearchOpen, 
-    todaysForecast, currentLocation}) => {
+const LeftSideBar: React.FunctionComponent<Props> = ({ getCurrentLocationWeather, setIsSearchOpen }) => {
+    const [weatherData, setWeatherData] = React.useState<any>(null);
+    const weatherDataList = useSelector<any>(state => state.weatherData);
+
+    React.useEffect(() => {
+        if(weatherDataList != null) {
+            setWeatherData(weatherDataList);
+            console.log(weatherData, 'dsts');
+        }
+    }, [weatherDataList])
+
+    const todaysForecast = weatherData?.forecast.forecastday[0];
 
     return (
-        <Container>
+        <Main>
             <TodaysWeatherData>
                 <SearchLoc>
                     <SearchBtn onClick={() => setIsSearchOpen(true)}>Search for places</SearchBtn>
-                    <CurrentLocationBtn className="btn-icon material-icons" data-v-c587b06e="" onClick={() => getCurrentLocationWeather}> gps_fixed </CurrentLocationBtn>
+                    <CurrentLocationBtn className="btn-icon material-icons" onClick={getCurrentLocationWeather}> gps_fixed </CurrentLocationBtn>
                 </SearchLoc>
-                <WeatherImage src = {todaysForecast?.day.condition.icon} />
+                <WeatherImage src={todaysForecast?.day.condition.icon} />
                 <Weather>{todaysForecast?.day.avgtemp_c}<span>°C</span></Weather>
                 <Condition>{todaysForecast?.day.condition.text}</Condition>
-                <div><span>Today • </span>{todaysForecast?.date}</div>
-                <CurrentLoc> <GoLocation /> {currentLocation?.name} </CurrentLoc>
+                <div><span>Today • </span>{weatherData?.todaysForecast?.date}</div>
+                <CurrentLoc> <GoLocation /> {weatherData?.location.name} </CurrentLoc>
             </TodaysWeatherData>
-         </Container>
+        </Main>
     )
 }
-export default LeftSideBar; 
+export default connect(state => state)(LeftSideBar); 
