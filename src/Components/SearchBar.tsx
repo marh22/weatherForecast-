@@ -1,133 +1,138 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { FaTrash } from "react-icons/fa";
-import { useDispatch } from 'react-redux';
-import { getWeather } from '../Api';
+import React, { useState, useCallback } from "react";
+import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { getWeather } from "../Api";
 
 interface Props {
-    setIsSearchOpen: (isOpen: boolean) => void;
+  setIsSearchOpen: (isOpen: boolean) => void;
+  isSearchOpen: boolean;
 }
 
 const SearchMenu = styled.div`
-width: 30%;
-height: 100vh;
-background: #1e213a;
-position: absolute;
-top: 0;
-left: 0;
+  width: 30%;
+  height: 100vh;
+  background: #1e213a;
+  position: fixed;
+  top: 0;
+  left: 0;
 `;
 
 const CloseBtn = styled.div`
-margin-top: 20px;
-margin-right: 53px;
-color: white;
-font-size: 24px;
-cursor: pointer;
-text-align: right;
+  margin-top: 20px;
+  margin-right: 53px;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  text-align: right;
 `;
 
 const SearchForm = styled.div`
-width: 90%;
-display: flex;
-flex-direction: row;
-flex-wrap: wrap;
-align-items: center;
-align-content: space-between;
-margin: auto;
-position: relative;
-`;
-
-const SearchInput = styled.input`
-width: 60%;
-margin: 45px -2px;
-height: 48px;
-background: transparent;
-border: 1px solid #e7e7eb;
-color: #fff;
-padding-left: 50px;
-font-family: Raleway,sans-serif;
-font-weight: 500;
-font-size: 16px;
-`;
-
-const SearchBtn = styled.div`
-font-family: Raleway,sans-serif;
-font-style: normal;
-font-weight: 600;
-font-size: 16px;
-color: #e7e7eb;
-padding: 18px 20px;
-background: #3c47e9;
-margin-left: 10px;
-cursor: pointer;
-border: none;
+  width: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: auto;
+  input {
+    width: 60%;
+    margin: 40px 0px;
+    height: 48px;
+    background: transparent;
+    border: 1px solid #e7e7eb;
+    color: #fff;
+    padding-left: 30px;
+    font-size: 16px;
+  }
+  button {
+    font-size: 16px;
+    color: #e7e7eb;
+    padding: 16px 20px;
+    background: #3c47e9;
+    margin-left: 10px;
+    cursor: pointer;
+    border: none;
+  }
 `;
 
 const CitiesList = styled.div`
-display: flex;
-justify-content: space-between;
-font-family: Raleway,sans-serif;
-font-style: normal;
-font-weight: 500;
-font-size: 18px;
-padding: 30px;
-color: #e7e7eb;
-
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  padding: 30px;
+  color: #e7e7eb;
 `;
 
-const Remove = styled.div`
-cursor: pointer;
+const City = styled.div`
+  font-size: 17px;
+  &:hover {
+    border: 1px solid #e7e7eb;
+    padding: 15px;
+    width: 80%;
+    cursor: pointer;
+  }
 `;
 
-const cities: string[] = [];
+const SearchBar: React.FunctionComponent<Props> = ({
+  isSearchOpen,
+  setIsSearchOpen
+}) => {
+  const [inputValue, setInputValue] = useState<string>("");
+  const dispatch = useDispatch();
+  const citiesDataList: any = useSelector<any>((state) => state.citiesList);
 
-const SearchBar: React.FunctionComponent<Props> = ({ setIsSearchOpen }) => {
-    const [inputValue, setInputValue] = useState<string>('');
-    const [citiesList, setCitiesList] = useState<string[]>([]);
-    const dispatch = useDispatch();
+  const getCitiesData = ( name: string) => {
+    const newCitiesDataList = citiesDataList.filter(
+      (item: any) => item.location.name === name
+    );
+    const action = {
+      type: "SET_WEATHER",
+      payload: newCitiesDataList.item,
+    };
+    dispatch(action);
+  };
 
-    const handleOnClick = async () => {
-        const weatherData = await getWeather(inputValue);
-        const action = {
-            type: 'SET_WEATHER',
-            payload: weatherData,
-        }
-        dispatch(action);
-        cities.push(inputValue);
-        setCitiesList([...cities]);
-        setInputValue('');
-    }
+  const handleOnClick = async () => {
+    const weatherData = await getWeather(inputValue);
+    const action = {
+      type: "SET_WEATHER",
+      payload: weatherData,
+    };
+    dispatch(action);
+    const actn = {
+      type: "SET_CITIES",
+      payload: weatherData,
+    };
+    dispatch(actn);
+    setInputValue("");
+  };
 
-    const handleOnChange = (searchtext: string) => {
-        setInputValue(searchtext);
-    }
+  const handleOnChange = useCallback((searchtext: string) => {
+    setInputValue(searchtext);
+  }, []);
 
-    const deleteItemFromCitiesList = (index: number) => {
-        const newCitiesList = [...citiesList];
-        if (index > -1)
-            newCitiesList.splice(index, 1);
-          setCitiesList(newCitiesList);
-    }
+  const IsOpen = useCallback(() => {
+    setIsSearchOpen(false);
+  }, [isSearchOpen]);
 
-    return (
-        <SearchMenu>
-            <CloseBtn onClick={() => setIsSearchOpen(false)}> x </CloseBtn>
-            <SearchForm>
-                <SearchInput 
-                    placeholder="search for places" 
-                    onChange={(event) => handleOnChange(event?.target.value)} 
-                    value={inputValue}
-                />
-                <SearchBtn onClick={handleOnClick}>search</SearchBtn>
-            </SearchForm>
-            {citiesList != null && citiesList.length !== 0 && citiesList.map((item, index) =>
-                <CitiesList key={index}>
-                    <div>{item}</div>
-                    <Remove><FaTrash onClick={() => deleteItemFromCitiesList(index)}></FaTrash></Remove>
-                </CitiesList>
-            )}
-        </SearchMenu>
-    )
-}
+  return (
+    <SearchMenu>
+      <CloseBtn onClick={IsOpen}> x </CloseBtn>
+      <SearchForm>
+        <input
+          placeholder="search for places"
+          onChange={(event) => handleOnChange(event?.target.value)}
+          value={inputValue}
+        />
+        <button onClick={handleOnClick}>search</button>
+      </SearchForm>
+      {citiesDataList.map((item: any, index: number) => (
+        <CitiesList key={index}>
+          <City onClick={() => getCitiesData(item.location.name )}>
+            {item.location.name}
+          </City>
+        </CitiesList>
+      ))}
+    </SearchMenu>
+  );
+};
 
 export default SearchBar;
