@@ -62,7 +62,7 @@ const CitiesList = styled.div`
 `;
 
 const City = styled.div`
-  font-size: 17px;
+  font-size: 16px;
   &:hover {
     border: 1px solid #e7e7eb;
     padding: 15px;
@@ -79,7 +79,7 @@ const SearchBar: React.FunctionComponent<Props> = ({
   const dispatch = useDispatch();
   const citiesDataList: any = useSelector<any>((state) => state.citiesList);
 
-  const getCitiesData = ( name: string) => {
+  const getCitiesData = useCallback((name: string) => {
     const newCitiesDataList = citiesDataList.filter(
       (item: any) => item.location.name === name
     );
@@ -88,7 +88,7 @@ const SearchBar: React.FunctionComponent<Props> = ({
       payload: newCitiesDataList.item,
     };
     dispatch(action);
-  };
+  }, []);
 
   const handleOnClick = async () => {
     const weatherData = await getWeather(inputValue);

@@ -22,7 +22,7 @@ const Container = styled.div`
 `;
 
 const TopBtns = styled.div`
-  margin-top: 42px;
+  margin-top: 44px;
   margin-right: 100px;
   display: flex;
   flex-direction: row-reverse;

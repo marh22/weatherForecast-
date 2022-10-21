@@ -8,7 +8,6 @@ import Content from "./Content";
 const Main = () => {
   const [isTempC, setIsTempC] = useState<boolean>(false);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
-  const [weatherData, setWeatherData] = useState<any>(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -39,8 +38,6 @@ const Main = () => {
           isSearchOpen={isSearchOpen}
           getCurrentLocationWeather={getCurrentLocationWeather}
           isTempC={isTempC}
-          setWeatherData={setWeatherData}
-          weatherData={weatherData}
         />
       )}
       <Content setIsTempC={setIsTempC} isTempC={isTempC} />

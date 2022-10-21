@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import TodaysWeathersData from "./TodaysWeathersData";
@@ -8,8 +8,6 @@ interface Props {
   setIsSearchOpen: (isOpen: boolean) => void;
   isSearchOpen: boolean;
   isTempC: boolean;
-  setWeatherData: any;
-  weatherData: any;
 }
 
 const Main = styled.div`
@@ -55,10 +53,9 @@ const LeftSideBar: React.FunctionComponent<Props> = ({
   setIsSearchOpen,
   getCurrentLocationWeather,
   isTempC,
-  setWeatherData,
-  weatherData,
 }) => {
   const weatherDataList = useSelector<any>((state) => state.weatherData);
+  const [weatherData, setWeatherData] = useState<any>(null);
 
   const IsOpen = useCallback(() => {
     setIsSearchOpen(true);

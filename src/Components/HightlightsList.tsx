@@ -9,7 +9,7 @@ interface Props {
 const HightlightsDetails = styled.div`
   width: 80%;
   text-align: left;
-  margin: 25px auto;
+  margin: 24px auto;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -33,7 +33,7 @@ const HightlightsCard = styled.div`
 
 const Data = styled.div`
   font-weight: 700;
-  font-size: 45px;
+  font-size: 44px;
   color: #e7e7eb;
   span {
     font-weight: 400;
@@ -87,7 +87,6 @@ const WindDirection = styled.div`
   padding: 5px;
   background: hsla(0, 0%, 100%, 0.3);
   display: inline-block;
-  vertical-align: middle;
   margin-right: 5px;
   transform: rotate(276deg);
   font-family: "Material Icons";
