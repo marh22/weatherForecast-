@@ -28,6 +28,7 @@ export interface ForecastEachDay {
 export interface  ForecastHour{
     humidity: number;
     wind_mph: number;
+    wind_dir: string;
     vis_miles: number;
     pressure_mb: number;
 }
