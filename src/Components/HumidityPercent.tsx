@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
-interface Props {}
+interface Props {
+  humidity: number;
+}
 
 const Bar = styled.div`
   width: 80%;
@@ -39,7 +41,8 @@ const PercentSimbol = styled.div`
   color: #a09fb1;
 `;
 
-const HumidityPercent: React.FC<Props> = () => {
+export const HumidityPercent: React.FC<Props> = ({ humidity }) => {
+
   return (
     <Bar>
       <Percent>
@@ -48,11 +51,9 @@ const HumidityPercent: React.FC<Props> = () => {
         <div>100</div>
       </Percent>
       <ProgresBar>
-        <div></div>
+        <div style={{ width: `${humidity}%`}} ></div>
       </ProgresBar>
       <PercentSimbol>%</PercentSimbol>
     </Bar>
   );
 };
-
-export default HumidityPercent;

@@ -2,11 +2,11 @@ import React from "react";
 import { ForecastEachDay } from "../Types/weather";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-import HightlightsList from "./HightlightsList";
-import WindDirection from "./WindDirection";
-import HumidityPercent from "./HumidityPercent";
-import TemperatureUnit from "./TemperatureUnit";
-import DaysCard from "./DaysCard";
+import { HightlightsList } from "./HightlightsList";
+import { WindDirection } from "./WindDirection";
+import { HumidityPercent } from "./HumidityPercent";
+import { TemperatureUnit } from "./TemperatureUnit";
+import { DaysCard } from "./DaysCard";
 
 interface Props {
   todaysForecast?: ForecastEachDay;
@@ -51,46 +51,52 @@ const HightlightsTitle = styled.div`
   margin-left: 120px;
 `;
 
-const Content: React.FC<Props> = ({ setIsTempC, isTempC }) => {
+export const Content: React.FC<Props> = ({ setIsTempC, isTempC }) => {
   const [weatherData, setWeatherData] = React.useState<any>(null);
   const weatherDataList = useSelector<any>((state) => state.weatherData);
 
   React.useEffect(() => {
-    if (weatherDataList != null) {
+    if (weatherDataList !== null) {
       setWeatherData(weatherDataList);
     }
   }, [weatherDataList]);
 
   const todaysHightlights = weatherData?.forecast.forecastday[0].hour[0];
-  const NewForecastDay = weatherData?.forecast.forecastday.slice(1, 6);
+  const newForecastDay = weatherData?.forecast.forecastday.slice(1, 6);
 
   return (
     <Container>
-      <TemperatureUnit setIsTempC={setIsTempC} />
+      <TemperatureUnit setIsTempC={setIsTempC} isTempC={isTempC}/>
+
       <DaysContent>
-        {weatherData != null &&
-          NewForecastDay.map((item: ForecastEachDay, index: number) => (
+        {weatherData !== null &&
+          newForecastDay.map((item: ForecastEachDay, index: number) => (
             <DaysCard
               key={index}
               date={item.date}
               icon={item.day.condition.icon}
-              isTempC={isTempC}
-              maxTempC={item.day.maxtemp_c}
-              minTempC={item.day.mintemp_c}
-              tempUnitC={"°C"}
-              maxTempF={item.day.maxtemp_f}
-              minTempF={item.day.mintemp_f}
-              tempUnitF={"°F"}
+              {...(isTempC
+                ? {
+                    maxTemp: item.day.maxtemp_c,
+                    minTemp: item.day.mintemp_c,
+                    tempUnit: "°C",
+                  }
+                : {
+                    maxTemp: item.day.maxtemp_f,
+                    minTemp: item.day.mintemp_f,
+                    tempUnit: "°F",
+                  })}
             />
           ))}
       </DaysContent>
+
       <HightlightsTitle>Today's Hightlights</HightlightsTitle>
       <HightlightsDetails>
         <HightlightsList
           title={"Wind Status"}
           data={todaysHightlights?.wind_mph}
           unit={"mph"}
-          windDirection={
+          customElement={
             <WindDirection wind_dir={todaysHightlights?.wind_dir} />
           }
         />
@@ -98,7 +104,9 @@ const Content: React.FC<Props> = ({ setIsTempC, isTempC }) => {
           title={"Humidity"}
           data={todaysHightlights?.humidity}
           unit={"%"}
-          humidityPercent={<HumidityPercent />}
+          customElement={
+            <HumidityPercent humidity={todaysHightlights?.humidity} />
+          }
         />
         <HightlightsList
           title={"Visibility"}
@@ -114,5 +122,3 @@ const Content: React.FC<Props> = ({ setIsTempC, isTempC }) => {
     </Container>
   );
 };
-
-export default Content;

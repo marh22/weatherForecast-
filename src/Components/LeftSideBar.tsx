@@ -1,7 +1,8 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-import TodaysWeathersData from "./TodaysWeathersData";
+import { WeatherDataType } from "../Types/weather";
+import { TodaysWeathersData } from "./TodaysWeathersData";
 
 interface Props {
   getCurrentLocationWeather: () => Promise<void>;
@@ -9,7 +10,7 @@ interface Props {
   isSearchOpen: boolean;
   isTempC: boolean;
   setWeatherData: any;
-  weatherData: any;
+  weatherData: WeatherDataType;
 }
 
 const Main = styled.div`
@@ -27,7 +28,8 @@ const SearchLoc = styled.div`
   flex-wrap: wrap;
   width: 100%;
   justify-content: space-around;
-  margin-top: -40%;
+  position: absolute;
+  top: 4%;
 `;
 
 const SearchBtn = styled.button`
@@ -50,7 +52,7 @@ const CurrentLocationBtn = styled.button`
   cursor: pointer;
 `;
 
-const LeftSideBar: React.FC<Props> = ({
+export const LeftSideBar: React.FC<Props> = ({
   isSearchOpen,
   setIsSearchOpen,
   getCurrentLocationWeather,
@@ -60,22 +62,22 @@ const LeftSideBar: React.FC<Props> = ({
 }) => {
   const weatherDataList = useSelector<any>((state) => state.weatherData);
 
-  const IsOpen = useCallback(() => {
+  const openSearchBar = useCallback(() => {
     setIsSearchOpen(true);
   }, [isSearchOpen]);
 
   React.useEffect(() => {
-    if (weatherDataList != null) {
+    if (weatherDataList !== null) {
       setWeatherData(weatherDataList);
     }
   }, [weatherDataList]);
 
-  const todaysForecast = weatherData?.forecast.forecastday[0];
+  const todayForecast = weatherData?.forecast.forecastday[0];
 
   return (
     <Main>
       <SearchLoc>
-        <SearchBtn onClick={IsOpen}>Search for places</SearchBtn>
+        <SearchBtn onClick={openSearchBar}>Search for places</SearchBtn>
         <CurrentLocationBtn
           className="btn-icon material-icons"
           onClick={getCurrentLocationWeather}
@@ -84,17 +86,14 @@ const LeftSideBar: React.FC<Props> = ({
         </CurrentLocationBtn>
       </SearchLoc>
       <TodaysWeathersData
-        weatherData={weatherData}
-        isTempC={isTempC}
-        text={todaysForecast?.day.condition.text}
-        date={todaysForecast?.date}
+        text={todayForecast?.day.condition.text}
+        date={todayForecast?.date}
         locName={weatherData?.location.name}
-        icon={todaysForecast?.day.condition.icon}
-        tempF={todaysForecast?.day.avgtemp_f}
-        tempC={todaysForecast?.day.avgtemp_c}
+        icon={todayForecast?.day.condition.icon}
+        {...(isTempC
+          ? { temp: todayForecast?.day.avgtemp_c, tempUnit: "°C" }
+          : { temp: todayForecast?.day.avgtemp_f, tempUnit: "°F" })}
       />
     </Main>
   );
 };
-
-export default LeftSideBar;

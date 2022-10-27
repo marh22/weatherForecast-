@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { getWeather } from "../Api";
+import { Location } from "../Types/weather";
 
 interface Props {
   setIsSearchOpen: (isOpen: boolean) => void;
@@ -15,6 +16,7 @@ const SearchMenu = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+  padding: 0 15px;
 `;
 
 const CloseBtn = styled.div`
@@ -31,7 +33,6 @@ const SearchForm = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  margin: auto;
   input {
     width: 60%;
     margin: 40px 0px;
@@ -45,7 +46,7 @@ const SearchForm = styled.div`
   button {
     font-size: 16px;
     color: #e7e7eb;
-    padding: 16px 20px;
+    padding: 16px 30px;
     background: #3c47e9;
     margin-left: 10px;
     cursor: pointer;
@@ -53,25 +54,18 @@ const SearchForm = styled.div`
   }
 `;
 
-const CitiesList = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-size: 18px;
-  padding: 30px;
-  color: #e7e7eb;
-`;
-
 const City = styled.div`
-  font-size: 17px;
+  font-size: 18px;
+  color: #e7e7eb;
+  padding: 20px;
   &:hover {
     border: 1px solid #e7e7eb;
-    padding: 15px;
     width: 80%;
     cursor: pointer;
   }
 `;
 
-const SearchBar: React.FC<Props> = ({
+export const SearchBar: React.FC<Props> = ({
   isSearchOpen,
   setIsSearchOpen,
 }) => {
@@ -79,18 +73,19 @@ const SearchBar: React.FC<Props> = ({
   const dispatch = useDispatch();
   const citiesDataList: any = useSelector<any>((state) => state.citiesList);
 
-  const getCitiesData = (name: string) => {
+  const getCitiesData = useCallback((name: string) => {
     const newCitiesDataList = citiesDataList.filter(
-      (item: any) => item.location.name === name
+      (item: Location) => item.location.name === name
     );
+    console.log(newCitiesDataList);
     const action = {
       type: "SET_WEATHER",
       payload: newCitiesDataList.item,
     };
     dispatch(action);
-  };
+  }, []);
 
-  const handleOnClick = async () => {
+  const handleSearchClick = async () => {
     const weatherData = await getWeather(inputValue);
     const action = {
       type: "SET_WEATHER",
@@ -105,34 +100,35 @@ const SearchBar: React.FC<Props> = ({
     setInputValue("");
   };
 
-  const handleOnChange = useCallback((searchtext: string) => {
-    setInputValue(searchtext);
-  }, []);
+  const handleSearchChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setInputValue(event?.target.value);
+    },
+    []
+  );
 
-  const IsOpen = useCallback(() => {
+  const openLeftSideBar = useCallback(() => {
     setIsSearchOpen(false);
   }, [isSearchOpen]);
 
   return (
     <SearchMenu>
-      <CloseBtn onClick={IsOpen}> x </CloseBtn>
+      <CloseBtn onClick={openLeftSideBar}> x </CloseBtn>
       <SearchForm>
         <input
           placeholder="search for places"
-          onChange={(event) => handleOnChange(event?.target.value)}
+          onChange={handleSearchChange}
           value={inputValue}
         />
-        <button onClick={handleOnClick}>search</button>
+        <button onClick={handleSearchClick}>search</button>
       </SearchForm>
-      {citiesDataList.map((item: any, index: number) => (
-        <CitiesList key={index}>
-          <City onClick={() => getCitiesData(item.location.name)}>
+      <div>
+        {citiesDataList.map((item: Location, index: number) => (
+          <City onClick={() => getCitiesData(item.location.name)} key={index}>
             {item.location.name}
           </City>
-        </CitiesList>
-      ))}
+        ))}
+      </div>
     </SearchMenu>
   );
 };
-
-export default SearchBar;

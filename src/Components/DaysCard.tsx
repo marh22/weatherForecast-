@@ -4,13 +4,9 @@ import styled from "styled-components";
 interface Props {
   date: string;
   icon: string;
-  isTempC: boolean;
-  maxTempC: number;
-  minTempC: number;
-  tempUnitC: string;
-  maxTempF: number;
-  minTempF: number;
-  tempUnitF: string;
+  maxTemp: number;
+  minTemp: number;
+  tempUnit: string;
 }
 
 const Minicard = styled.div`
@@ -35,38 +31,23 @@ const Temp = styled.div`
   }
 `;
 
-const DaysCard: React.FC<Props> = ({
+export const DaysCard: React.FC<Props> = ({
   date,
   icon,
-  isTempC,
-  maxTempC,
-  minTempC,
-  tempUnitC,
-  maxTempF,
-  minTempF,
-  tempUnitF,
+  maxTemp,
+  minTemp,
+  tempUnit,
 }) => {
   return (
     <Minicard>
       <div>{date}</div>
       <img src={icon} />
-      {isTempC ? (
-        <Temp>
-          <span>{maxTempF}</span>
-          <span>{tempUnitF}</span>
-          <span>{minTempF}</span>
-          <span>{tempUnitF}</span>
-        </Temp>
-      ) : (
-        <Temp>
-          <span>{maxTempC}</span>
-          <span>{tempUnitC}</span>
-          <span>{minTempC}</span>
-          <span>{tempUnitC}</span>
-        </Temp>
-      )}
+      <Temp>
+        <span>{maxTemp}</span>
+        <span>{tempUnit}</span>
+        <span>{minTemp}</span>
+        <span>{tempUnit}</span>
+      </Temp>
     </Minicard>
   );
 };
-
-export default DaysCard;

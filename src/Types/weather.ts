@@ -34,6 +34,7 @@ export interface  ForecastHour{
 }
 
 export interface Location {
+    location: Location; 
     name: string;
 }
 

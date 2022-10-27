@@ -1,12 +1,14 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
+import { SelectTemperatureUnit } from "./SelectTemperatureUnit";
 
 interface Props {
-    setIsTempC: (isTempC: boolean) => void;
+  setIsTempC: (isTempC: boolean) => void;
+  isTempC: boolean;
 }
 
 const TopBtns = styled.div`
-  margin-top: 42px;
+  margin-top: 20px;
   margin-right: 100px;
   display: flex;
   flex-direction: row-reverse;
@@ -24,40 +26,34 @@ const Btn = styled.div`
   cursor: pointer;
 `;
 
-const TemperatureUnit: React.FC<Props> = ({ setIsTempC }) => {
-  const [isC, setIsC] = React.useState<boolean>(true);
-  const [isF, setIsF] = React.useState<boolean>(false);
+export const TemperatureUnit: React.FC<Props> = ({ setIsTempC, isTempC }) => {
+  const [unit, setUnit] = React.useState<"C" | "F">("C");
+  const [selected, setSelected] = React.useState(false);
 
-  const handleOnClickC = useCallback(() => {
-    setIsC(true);
-    setIsF(false);
-    setIsTempC(false);
+  const handleOnClickUnitC = useCallback(() => {
+    setUnit("C");
+    setIsTempC(true);
+    setSelected(!selected);
   }, []);
 
-  const handleOnClickF = useCallback(() => {
-    setIsC(false);
-    setIsF(true);
-    setIsTempC(true);
+  const handleOnClickUnitF = useCallback(() => {
+    setUnit("F");
+    setIsTempC(false);
+    setSelected(!selected);
   }, []);
 
   return (
-    <>
-      <TopBtns>
-        <Btn
-          style={{ backgroundColor: isF ? "#FFF" : "#585676" }}
-          onClick={handleOnClickF}
-        >
-          °F
-        </Btn>
-        <Btn
-          style={{ backgroundColor: isC ? "#FFF" : "#585676" }}
-          onClick={handleOnClickC}
-        >
-          °C
-        </Btn>
-      </TopBtns>
-    </>
+    <TopBtns>
+      <SelectTemperatureUnit
+        value={"F"}
+        selected={unit === "F"}
+        handleOnClickTempUnit={handleOnClickUnitF}
+      />
+      <SelectTemperatureUnit
+        value={"C"}
+        selected={unit === "C"}
+        handleOnClickTempUnit={handleOnClickUnitC}
+      />
+    </TopBtns>
   );
 };
-
-export default TemperatureUnit;

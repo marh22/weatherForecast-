@@ -1,20 +1,17 @@
 import React from "react";
 import styled from "styled-components";
 import { GoLocation } from "react-icons/go";
-import { WeatherDataType } from "../Types/weather";
 
 interface Props {
-  weatherData: WeatherDataType;
-  isTempC: boolean;
   text: string;
   date: string;
   locName: string;
   icon: string;
-  tempF: number;
-  tempC: number;
+  temp: number;
+  tempUnit: string;
 }
 
-const TodaysWeatherData = styled.div`
+const TodaysWeather = styled.div`
   background: linear-gradient(
       rgba(30, 33, 58, 0.95) 100%,
       rgba(30, 33, 58, 0.95) 0
@@ -27,23 +24,20 @@ const TodaysWeatherData = styled.div`
   flex-direction: column;
   align-items: center;
   color: #a09fb1;
-`;
-
-const WeatherImage = styled.img`
-  width: 190px;
-  margin-top: 10px;
+  img {
+    width: 190px;
+    margin-top: 10px;
+  }
+  span {
+    font-size: 22px;
+    margin: 40px 0;
+  }
 `;
 
 const Weather = styled.div`
   color: #e7e7eb;
   font-size: 65px;
   margin-top: 10px;
-`;
-
-const Condition = styled.div`
-  color: #a09fb1;
-  font-size: 22px;
-  margin: 40px 0;
 `;
 
 const CurrentLoc = styled.div`
@@ -54,30 +48,22 @@ const CurrentLoc = styled.div`
   color: #88869d;
 `;
 
-const TodaysWeathersData: React.FC<Props> = ({
-  isTempC,
+export const TodaysWeathersData: React.FC<Props> = ({
   text,
   date,
   locName,
   icon,
-  tempF,
-  tempC,
+  temp,
+  tempUnit,
 }) => {
   return (
-    <TodaysWeatherData>
-      <WeatherImage src={icon} />
-      {isTempC ? (
-        <Weather>
-          {tempF}
-          <span>°F</span>
-        </Weather>
-      ) : (
-        <Weather>
-          {tempC}
-          <span>°C</span>
-        </Weather>
-      )}
-      <Condition>{text}</Condition>
+    <TodaysWeather>
+      <img src={icon} />
+      <Weather>
+        {temp}
+        {tempUnit}
+      </Weather>
+      <span>{text}</span>
       <div>
         <span>Today • </span>
         {date}
@@ -85,8 +71,6 @@ const TodaysWeathersData: React.FC<Props> = ({
       <CurrentLoc>
         <GoLocation /> {locName}
       </CurrentLoc>
-    </TodaysWeatherData>
+    </TodaysWeather>
   );
 };
-
-export default TodaysWeathersData;
