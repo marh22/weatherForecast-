@@ -1,6 +1,6 @@
-import { WEATHER_API_URL, ADRESS_API_URL, GEOLOCATION_API_URL} from "./config";
+import { WEATHER_API_URL, IP_ADRESS_API_URL, GEOLOCATION_API_URL} from "./config";
 
-export const getWeather = async (country: string): Promise<any> => {
+export const getWeather = async (location: string): Promise<any> => {
     const options = {
         method: 'GET',
         headers: {
@@ -9,7 +9,7 @@ export const getWeather = async (country: string): Promise<any> => {
         }
     };
     try {
-        const weather = await fetch(WEATHER_API_URL + `{${country}}&days=6&aqi=no&alerts=no`, options)
+        const weather = await fetch(WEATHER_API_URL + `{${location}}&days=6&aqi=no&alerts=no`, options)
         return weather.json();
     }
     catch (err) {
@@ -17,9 +17,9 @@ export const getWeather = async (country: string): Promise<any> => {
     }
 }
 
-export const getApiAdress = async (): Promise<any> => {
+export const getCurrentIpAdress = async (): Promise<any> => {
     try {
-        const ip = await fetch(ADRESS_API_URL);
+        const ip = await fetch(IP_ADRESS_API_URL);
         return ip.json();
     }
     catch (err) {

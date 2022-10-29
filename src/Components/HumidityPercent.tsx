@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
+import { ProgresBar } from "./ProgresBar";
 
 interface Props {
   humidity: number;
@@ -8,18 +9,6 @@ interface Props {
 const Bar = styled.div`
   width: 80%;
   margin: 0 auto;
-`;
-
-const ProgresBar = styled.div`
-  height: 8px;
-  background: #fff;
-  border-radius: 50px;
-  div {
-    height: 8px;
-    background: #ffec65;
-    width: 81%;
-    border-radius: 50px;
-  }
 `;
 
 const Percent = styled.div`
@@ -42,17 +31,14 @@ const PercentSimbol = styled.div`
 `;
 
 export const HumidityPercent: React.FC<Props> = ({ humidity }) => {
-
   return (
     <Bar>
       <Percent>
-        <div>0</div>
-        <div>50</div>
-        <div>100</div>
+        <span>0</span>
+        <span>50</span>
+        <span>100</span>
       </Percent>
-      <ProgresBar>
-        <div style={{ width: `${humidity}%`}} ></div>
-      </ProgresBar>
+      <ProgresBar humidity={humidity} />
       <PercentSimbol>%</PercentSimbol>
     </Bar>
   );

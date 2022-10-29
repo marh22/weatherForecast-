@@ -4,11 +4,13 @@ import { WeatherDataType } from "../Types/weather";
 interface StoreInterface {
   weatherData: WeatherDataType | null;
   citiesList: any[];
+  unit: string;
 }
 
 const initialState: StoreInterface = {
   weatherData: null,
   citiesList: [],
+  unit: "C",
 };
 
 const store = createStore(handleState);
@@ -27,6 +29,11 @@ function handleState(
       return {
         ...state,
         citiesList: [...state.citiesList, action.payload],
+      };
+    case "CURRENT_UNIT":
+      return {
+        ...state,
+        unit: action.payload,
       };
     default:
       return state;

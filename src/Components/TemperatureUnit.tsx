@@ -1,20 +1,14 @@
 import React, { useCallback } from "react";
 import styled from "styled-components";
-import { SelectTemperatureUnit } from "./SelectTemperatureUnit";
+import { Unit } from "../Components/TemperatureUnitSelector";
 
 interface Props {
-  setIsTempC: (isTempC: boolean) => void;
-  isTempC: boolean;
+  value: Unit;
+  selected: boolean;
+  onClick(unit: Unit): void;
 }
 
-const TopBtns = styled.div`
-  margin-top: 20px;
-  margin-right: 100px;
-  display: flex;
-  flex-direction: row-reverse;
-`;
-
-const Btn = styled.div`
+const TempUnitBtn = styled.div<Props>`
   border-radius: 100%;
   padding: 15px;
   font-weight: 700;
@@ -22,38 +16,22 @@ const Btn = styled.div`
   margin-right: 15px;
   color: #110e3c;
   text-align: center;
-  background: #585676;
+  background-color: ${(props) => (props.selected ? `#FFF` : `#585676`)};
   cursor: pointer;
 `;
 
-export const TemperatureUnit: React.FC<Props> = ({ setIsTempC, isTempC }) => {
-  const [unit, setUnit] = React.useState<"C" | "F">("C");
-  const [selected, setSelected] = React.useState(false);
-
-  const handleOnClickUnitC = useCallback(() => {
-    setUnit("C");
-    setIsTempC(true);
-    setSelected(!selected);
-  }, []);
-
-  const handleOnClickUnitF = useCallback(() => {
-    setUnit("F");
-    setIsTempC(false);
-    setSelected(!selected);
-  }, []);
+export const TemperatureUnit: React.FC<Props> = ({
+  value,
+  onClick,
+  selected,
+}) => {
+  const handleOnClick = useCallback(() => {
+    onClick(value);
+  }, [value, onClick]);
 
   return (
-    <TopBtns>
-      <SelectTemperatureUnit
-        value={"F"}
-        selected={unit === "F"}
-        handleOnClickTempUnit={handleOnClickUnitF}
-      />
-      <SelectTemperatureUnit
-        value={"C"}
-        selected={unit === "C"}
-        handleOnClickTempUnit={handleOnClickUnitC}
-      />
-    </TopBtns>
+    <TempUnitBtn selected={selected} onClick={handleOnClick} value={value}>
+      <span>{value}</span>
+    </TempUnitBtn>
   );
 };

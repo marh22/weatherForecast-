@@ -5,13 +5,11 @@ import { useSelector } from "react-redux";
 import { HightlightsList } from "./HightlightsList";
 import { WindDirection } from "./WindDirection";
 import { HumidityPercent } from "./HumidityPercent";
-import { TemperatureUnit } from "./TemperatureUnit";
+import { TemperatureUnitSelector } from "./TemperatureUnitSelector";
 import { DaysCard } from "./DaysCard";
 
 interface Props {
   todaysForecast?: ForecastEachDay;
-  setIsTempC: (isTempC: boolean) => void;
-  isTempC: boolean;
 }
 
 const Container = styled.div`
@@ -51,9 +49,10 @@ const HightlightsTitle = styled.div`
   margin-left: 120px;
 `;
 
-export const Content: React.FC<Props> = ({ setIsTempC, isTempC }) => {
+export const Content: React.FC<Props> = () => {
   const [weatherData, setWeatherData] = React.useState<any>(null);
   const weatherDataList = useSelector<any>((state) => state.weatherData);
+  const UnitTemp = useSelector<any>((state) => state.unit);
 
   React.useEffect(() => {
     if (weatherDataList !== null) {
@@ -66,26 +65,22 @@ export const Content: React.FC<Props> = ({ setIsTempC, isTempC }) => {
 
   return (
     <Container>
-      <TemperatureUnit setIsTempC={setIsTempC} isTempC={isTempC}/>
+      <TemperatureUnitSelector />
 
       <DaysContent>
         {weatherData !== null &&
-          newForecastDay.map((item: ForecastEachDay, index: number) => (
+          newForecastDay.map((item: ForecastEachDay, id: number) => (
             <DaysCard
-              key={index}
+              key={id}
               date={item.date}
               icon={item.day.condition.icon}
-              {...(isTempC
-                ? {
-                    maxTemp: item.day.maxtemp_c,
-                    minTemp: item.day.mintemp_c,
-                    tempUnit: "°C",
-                  }
-                : {
-                    maxTemp: item.day.maxtemp_f,
-                    minTemp: item.day.mintemp_f,
-                    tempUnit: "°F",
-                  })}
+              maxTemp={
+                UnitTemp === "C" ? item.day.maxtemp_c : item.day.maxtemp_f
+              }
+              minTemp={
+                UnitTemp === "C" ? item.day.mintemp_c : item.day.mintemp_f
+              }
+              tempUnit={UnitTemp === "C" ? "°C" : "°F"}
             />
           ))}
       </DaysContent>

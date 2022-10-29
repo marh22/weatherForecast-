@@ -123,8 +123,8 @@ export const SearchBar: React.FC<Props> = ({
         <button onClick={handleSearchClick}>search</button>
       </SearchForm>
       <div>
-        {citiesDataList.map((item: Location, index: number) => (
-          <City onClick={() => getCitiesData(item.location.name)} key={index}>
+        {citiesDataList.map((item: Location, id: number) => (
+          <City onClick={() => getCitiesData(item.location.name)} key={id}>
             {item.location.name}
           </City>
         ))}

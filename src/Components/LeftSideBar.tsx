@@ -8,8 +8,7 @@ interface Props {
   getCurrentLocationWeather: () => Promise<void>;
   setIsSearchOpen: (isOpen: boolean) => void;
   isSearchOpen: boolean;
-  isTempC: boolean;
-  setWeatherData: any;
+  setWeatherData: (weatherData: {} | undefined) => void;
   weatherData: WeatherDataType;
 }
 
@@ -56,11 +55,11 @@ export const LeftSideBar: React.FC<Props> = ({
   isSearchOpen,
   setIsSearchOpen,
   getCurrentLocationWeather,
-  isTempC,
   setWeatherData,
   weatherData,
 }) => {
   const weatherDataList = useSelector<any>((state) => state.weatherData);
+  const unitTemp = useSelector<any>((state) => state.unit);
 
   const openSearchBar = useCallback(() => {
     setIsSearchOpen(true);
@@ -90,9 +89,12 @@ export const LeftSideBar: React.FC<Props> = ({
         date={todayForecast?.date}
         locName={weatherData?.location.name}
         icon={todayForecast?.day.condition.icon}
-        {...(isTempC
-          ? { temp: todayForecast?.day.avgtemp_c, tempUnit: "°C" }
-          : { temp: todayForecast?.day.avgtemp_f, tempUnit: "°F" })}
+        temp={
+          unitTemp === "C"
+            ? todayForecast?.day.avgtemp_c
+            : todayForecast?.day.avgtemp_f
+        }
+        tempUnit={unitTemp === "C" ? "°C" : "°F"}
       />
     </Main>
   );
