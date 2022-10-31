@@ -37,8 +37,3 @@ export interface Location {
     location: Location; 
     name: string;
 }
-
-export interface LocationType {
-    latitude: number,
-    longitude: number
-}

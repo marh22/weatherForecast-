@@ -1,14 +1,13 @@
 import styled from "styled-components";
 
 interface Props {
-  humidity: number;
+  value: number;
 }
 
-export const ProgresBar = styled.div<Props>`
+export const ProgressBar = styled.div<Props>`
   height: 8px;
   border-radius: 50px;
-  height: 8px;
-  width: ${(props) => props.humidity}%;
+  width: ${(props) => props.value}%;
   background-color: #ffec65;
   border-radius: 50px;
 `;

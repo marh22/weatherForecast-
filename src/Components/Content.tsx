@@ -52,7 +52,7 @@ const HightlightsTitle = styled.div`
 export const Content: React.FC<Props> = () => {
   const [weatherData, setWeatherData] = React.useState<any>(null);
   const weatherDataList = useSelector<any>((state) => state.weatherData);
-  const UnitTemp = useSelector<any>((state) => state.unit);
+  const unitTemp = useSelector<any>((state) => state.unit);
 
   React.useEffect(() => {
     if (weatherDataList !== null) {
@@ -69,18 +69,17 @@ export const Content: React.FC<Props> = () => {
 
       <DaysContent>
         {weatherData !== null &&
-          newForecastDay.map((item: ForecastEachDay, id: number) => (
+          newForecastDay?.map((item: ForecastEachDay, id: number) => (
             <DaysCard
               key={id}
               date={item.date}
               icon={item.day.condition.icon}
               maxTemp={
-                UnitTemp === "C" ? item.day.maxtemp_c : item.day.maxtemp_f
+                unitTemp === "C" ? item.day.maxtemp_c : item.day.maxtemp_f
               }
               minTemp={
-                UnitTemp === "C" ? item.day.mintemp_c : item.day.mintemp_f
+                unitTemp === "C" ? item.day.mintemp_c : item.day.mintemp_f
               }
-              tempUnit={UnitTemp === "C" ? "°C" : "°F"}
             />
           ))}
       </DaysContent>
@@ -88,30 +87,30 @@ export const Content: React.FC<Props> = () => {
       <HightlightsTitle>Today's Hightlights</HightlightsTitle>
       <HightlightsDetails>
         <HightlightsList
-          title={"Wind Status"}
+          title="Wind Status"
           data={todaysHightlights?.wind_mph}
-          unit={"mph"}
+          unit="mph"
           customElement={
-            <WindDirection wind_dir={todaysHightlights?.wind_dir} />
+            <WindDirection windDirectionData={todaysHightlights?.wind_dir} />
           }
         />
         <HightlightsList
-          title={"Humidity"}
+          title="Humidity"
           data={todaysHightlights?.humidity}
-          unit={"%"}
+          unit="%"
           customElement={
             <HumidityPercent humidity={todaysHightlights?.humidity} />
           }
         />
         <HightlightsList
-          title={"Visibility"}
+          title="Visibility"
           data={todaysHightlights?.vis_miles}
-          unit={"miles"}
+          unit="miles"
         />
         <HightlightsList
-          title={"Air Pressure"}
+          title="Air Pressure"
           data={todaysHightlights?.pressure_mb}
-          unit={"mb"}
+          unit="mb"
         />
       </HightlightsDetails>
     </Container>

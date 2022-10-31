@@ -2,7 +2,8 @@ import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { getWeather } from "../Api";
-import { Location } from "../Types/weather";
+import { Location, WeatherDataType } from "../Types/weather";
+import { SearchedCity } from "./SearchedCity";
 
 interface Props {
   setIsSearchOpen: (isOpen: boolean) => void;
@@ -54,17 +55,6 @@ const SearchForm = styled.div`
   }
 `;
 
-const City = styled.div`
-  font-size: 18px;
-  color: #e7e7eb;
-  padding: 20px;
-  &:hover {
-    border: 1px solid #e7e7eb;
-    width: 80%;
-    cursor: pointer;
-  }
-`;
-
 export const SearchBar: React.FC<Props> = ({
   isSearchOpen,
   setIsSearchOpen,
@@ -77,16 +67,27 @@ export const SearchBar: React.FC<Props> = ({
     const newCitiesDataList = citiesDataList.filter(
       (item: Location) => item.location.name === name
     );
-    console.log(newCitiesDataList);
     const action = {
       type: "SET_WEATHER",
-      payload: newCitiesDataList.item,
+      payload: newCitiesDataList[0],
     };
     dispatch(action);
   }, []);
 
   const handleSearchClick = async () => {
     const weatherData = await getWeather(inputValue);
+    if (inputValue === "") {
+      return;
+    }
+    if (
+      citiesDataList.filter(
+        (element: WeatherDataType) =>
+          element.location.name.toUpperCase() === inputValue.toUpperCase()
+      ).length > 0
+    ) {
+      setInputValue("");
+      return;
+    }
     const action = {
       type: "SET_WEATHER",
       payload: weatherData,
@@ -124,9 +125,11 @@ export const SearchBar: React.FC<Props> = ({
       </SearchForm>
       <div>
         {citiesDataList.map((item: Location, id: number) => (
-          <City onClick={() => getCitiesData(item.location.name)} key={id}>
-            {item.location.name}
-          </City>
+          <SearchedCity
+            key={id}
+            locationName={item.location.name}
+            getCitiesData={getCitiesData}
+          />
         ))}
       </div>
     </SearchMenu>

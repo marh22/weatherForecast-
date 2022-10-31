@@ -2,11 +2,11 @@ import React from "react";
 import styled from "styled-components";
 
 interface Props {
-  wind_dir: string;
+  windDirectionData: string;
 }
 
 interface WindDir {
-  getWindDirection: any;
+  getWindDirection: number;
 }
 
 export const WindDir = styled.div<WindDir>`
@@ -19,41 +19,45 @@ export const WindDir = styled.div<WindDir>`
   margin-right: 5px;
   font-family: "Material Icons";
   font-size: 24px;
-  transform: rotate(${(props) => props.getWindDirection});
+  transform: rotate(${(props) => props.getWindDirection}deg);
 `;
 
-export const WindDirection: React.FC<Props> = ({ wind_dir }) => {
-  const getWindDirection = (wind_dir: string, WindDirectionIndex: number, degre: number) => {
-    const DirectionsArr = [
-      "N",
-      "NNE",
-      "NE",
-      "ENE",
-      "E",
-      "ESE",
-      "SE",
-      "SSE",
-      "S",
-      "SSW",
-      "SW",
-      "WSW",
-      "W",
-      "WNW",
-      "NW",
-      "NNW",
-    ];
-    for (let i = 0; i < DirectionsArr.length; i++) {
-      if (DirectionsArr[i] === wind_dir) {
-        WindDirectionIndex = i;
-      }
+const getWindDirection = (windDirectionData: string) => {
+  const DirectionsArr = [
+    "N",
+    "NNE",
+    "NE",
+    "ENE",
+    "E",
+    "ESE",
+    "SE",
+    "SSE",
+    "S",
+    "SSW",
+    "SW",
+    "WSW",
+    "W",
+    "WNW",
+    "NW",
+    "NNW",
+  ];
+  let WindDirectionIndex: number = 0;
+  for (let i = 0; i < DirectionsArr.length; i++) {
+    if (DirectionsArr[i] === windDirectionData) {
+      WindDirectionIndex = i;
     }
-    return degre = WindDirectionIndex * 22.5;
-  };
+  }
+  return WindDirectionIndex * 22.5;
+};
 
+export const WindDirection: React.FC<Props> = ({ windDirectionData }) => {
   return (
     <>
-      <WindDir getWindDirection={getWindDirection}> navigation </WindDir>
-      <span>{wind_dir}</span>
+      <WindDir getWindDirection={getWindDirection(windDirectionData)}>
+        {" "}
+        navigation{" "}
+      </WindDir>
+      <span>{windDirectionData}</span>
     </>
   );
 };

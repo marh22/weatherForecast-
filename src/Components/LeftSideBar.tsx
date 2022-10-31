@@ -71,7 +71,7 @@ export const LeftSideBar: React.FC<Props> = ({
     }
   }, [weatherDataList]);
 
-  const todayForecast = weatherData?.forecast.forecastday[0];
+  const todayForecast = weatherData?.forecast?.forecastday[0];
 
   return (
     <Main>
@@ -94,7 +94,6 @@ export const LeftSideBar: React.FC<Props> = ({
             ? todayForecast?.day.avgtemp_c
             : todayForecast?.day.avgtemp_f
         }
-        tempUnit={unitTemp === "C" ? "°C" : "°F"}
       />
     </Main>
   );

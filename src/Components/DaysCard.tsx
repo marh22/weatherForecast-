@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
 
 interface Props {
   date: string;
   icon: string;
   maxTemp: number;
   minTemp: number;
-  tempUnit: string;
 }
 
 const Minicard = styled.div`
@@ -31,22 +31,18 @@ const Temp = styled.div`
   }
 `;
 
-export const DaysCard: React.FC<Props> = ({
-  date,
-  icon,
-  maxTemp,
-  minTemp,
-  tempUnit,
-}) => {
+export const DaysCard: React.FC<Props> = ({ date, icon, maxTemp, minTemp }) => {
+  const unitTemp = useSelector<any>((state) => state.unit);
+
   return (
     <Minicard>
       <div>{date}</div>
       <img src={icon} />
       <Temp>
         <span>{maxTemp}</span>
-        <span>{tempUnit}</span>
+        <span>{unitTemp === "C" ? "°C" : "°F"}</span>
         <span>{minTemp}</span>
-        <span>{tempUnit}</span>
+        <span>{unitTemp === "C" ? "°C" : "°F"}</span>
       </Temp>
     </Minicard>
   );

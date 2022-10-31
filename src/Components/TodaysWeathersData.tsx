@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { GoLocation } from "react-icons/go";
+import { useSelector } from "react-redux";
 
 interface Props {
   text: string;
@@ -8,7 +9,6 @@ interface Props {
   locName: string;
   icon: string;
   temp: number;
-  tempUnit: string;
 }
 
 const TodaysWeather = styled.div`
@@ -38,6 +38,9 @@ const Weather = styled.div`
   color: #e7e7eb;
   font-size: 65px;
   margin-top: 10px;
+  span{
+    font-size: 55px;
+  }
 `;
 
 const CurrentLoc = styled.div`
@@ -54,14 +57,15 @@ export const TodaysWeathersData: React.FC<Props> = ({
   locName,
   icon,
   temp,
-  tempUnit,
 }) => {
+  const unitTemp = useSelector<any>((state) => state.unit);
+
   return (
     <TodaysWeather>
       <img src={icon} />
       <Weather>
         {temp}
-        {tempUnit}
+        <span>{unitTemp === "C" ? "°C" : "°F"}</span>
       </Weather>
       <span>{text}</span>
       <div>

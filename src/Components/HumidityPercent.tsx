@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { ProgresBar } from "./ProgresBar";
+import { ProgressBar } from "./ProgressBar";
 
 interface Props {
   humidity: number;
@@ -9,6 +9,14 @@ interface Props {
 const Bar = styled.div`
   width: 80%;
   margin: 0 auto;
+  div {
+    font-weight: 700;
+    font-size: 12px;
+    width: 100%;
+    text-align: right;
+    margin-top: 3px;
+    color: #a09fb1;
+  }
 `;
 
 const Percent = styled.div`
@@ -21,15 +29,6 @@ const Percent = styled.div`
   margin-bottom: 3px;
 `;
 
-const PercentSimbol = styled.div`
-  font-weight: 700;
-  font-size: 12px;
-  width: 100%;
-  text-align: right;
-  margin-top: 3px;
-  color: #a09fb1;
-`;
-
 export const HumidityPercent: React.FC<Props> = ({ humidity }) => {
   return (
     <Bar>
@@ -38,8 +37,8 @@ export const HumidityPercent: React.FC<Props> = ({ humidity }) => {
         <span>50</span>
         <span>100</span>
       </Percent>
-      <ProgresBar humidity={humidity} />
-      <PercentSimbol>%</PercentSimbol>
+      <ProgressBar value={humidity} />
+      <div>%</div>
     </Bar>
   );
 };
