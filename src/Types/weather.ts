@@ -12,7 +12,10 @@ export interface ForecastEachDay {
     day: {
         avgtemp_c: number,
         avgtemp_f: number,
-        temp: string,
+        maxtemp_c: number,
+        maxtemp_f: number,
+        mintemp_c: number,
+        mintemp_f: number,
         condition: {
             text: string,
             icon: string,
@@ -25,15 +28,12 @@ export interface ForecastEachDay {
 export interface  ForecastHour{
     humidity: number;
     wind_mph: number;
+    wind_dir: string;
     vis_miles: number;
     pressure_mb: number;
 }
 
 export interface Location {
+    location: Location; 
     name: string;
-}
-
-export interface LocationType {
-    latitude: number,
-    longitude: number
 }

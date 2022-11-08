@@ -1,238 +1,118 @@
 import React from "react";
-import {ForecastEachDay } from "../Types/weather";
-import styled from 'styled-components';
+import { ForecastEachDay } from "../Types/weather";
+import styled from "styled-components";
+import { useSelector } from "react-redux";
+import { HightlightsList } from "./HightlightsList";
+import { WindDirection } from "./WindDirection";
+import { HumidityPercent } from "./HumidityPercent";
+import { TemperatureUnitSelector } from "./TemperatureUnitSelector";
+import { DaysCard } from "./DaysCard";
 
 interface Props {
-    todaysForecast?: ForecastEachDay;}
-
-const Content: React.FunctionComponent<Props>  = ({todaysForecast}) => {
-
-    const Container = styled.div`
-    position: absolute;
-    width: 70%;
-    right: 0;
-    top: 0;
-    background: #100e1d;
-    min-height: 100vh;
-    color: white;
-    `;
-
-    const HightlightsTitle = styled.div`
-    font-family: Raleway,sans-serif;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 24px;
-    color: #e7e7eb;
-    margin: auto;
-    margin-top: 18%;
-    `;
-
-    const HightlightsDetails = styled.div`
-    width: 80%;
-    text-align: left;
-    margin: 30px auto;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    `;
-
-    const WindStatus = styled.div`
-    min-width: 350px;
-    background: #1e213a;
-    text-align: center;
-    margin: 15px 0;
-    `;
-
-    const WindStatusTitel = styled.h3`
-    font-weight: 500;
-    font-size: 16px;
-    text-align: center;
-    padding-top: 20px;
-    font-family: Raleway,sans-serif;
-    color: #e7e7eb;
-    `;
-
-    const WindData = styled.div`
-    font-weight: 700;
-    font-size: 45px;
-    font-family: Raleway,sans-serif;
-    color: #e7e7eb;
-    `;
-
-    const WindDesc = styled.span`
-    font-size: 25px;
-    font-weight: 400;
-    font-family: Raleway,sans-serif;
-    color: #e7e7eb;
-    `;
-
-    const Humidity = styled.div`
-    min-width: 350px;
-    background: #1e213a;
-    text-align: center;
-    margin: 15px 0;
-    `;
-
-    const HumidityTitel = styled.h3`
-    font-weight: 500;
-    font-size: 16px;
-    text-align: center;
-    padding-top: 20px;
-    font-family: Raleway,sans-serif;
-    color: #e7e7eb;
-    `;
-
-    const HumidityData = styled.div`
-    font-weight: 700;
-    font-size: 45px;
-    font-family: Raleway,sans-serif;
-    color: #e7e7eb;
-    `;
-
-    const HumidityDesc = styled.span`
-    font-size: 25px;
-    font-weight: 400;
-    font-family: Raleway,sans-serif;
-    color: #e7e7eb;
-    `;
-
-    const Visibility = styled.div`
-    min-width: 350px;
-    background: #1e213a;
-    text-align: center;
-    margin-bottom: 15px;
-    `;
-
-    const VisibilityTitel = styled.h3`
-    font-weight: 500;
-    font-size: 16px;
-    text-align: center;
-    padding-top: 20px;
-    font-family: Raleway,sans-serif;
-    color: #e7e7eb;
-    `;
-
-    const VisibilityData = styled.div`
-    font-weight: 700;
-    font-size: 45px;
-    font-family: Raleway,sans-serif;
-    color: #e7e7eb;
-    padding-bottom: 20px;
-    `;
-
-    const VisibilityDesc = styled.span`
-    font-size: 25px;
-    font-weight: 400;
-    font-family: Raleway,sans-serif;
-    color: #e7e7eb;
-    `;
-
-    const AirPressure = styled.div`
-    min-width: 350px;
-    background: #1e213a;
-    text-align: center;
-    margin-bottom: 20px;
-    `;
-
-    const AirPressureTitel = styled.h3`
-    font-weight: 500;
-    font-size: 16px;
-    text-align: center;
-    padding-top: 20px;
-    font-family: Raleway,sans-serif;
-    color: #e7e7eb;
-    `;
-
-    const AirPressureData = styled.div`
-    font-weight: 700;
-    font-size: 45px;
-    font-family: Raleway,sans-serif;
-    color: #e7e7eb;
-    padding-bottom: 20px;
-    `;
-
-    const AirPressureDesc = styled.span`
-    font-size: 25px;
-    font-weight: 400;
-    font-family: Raleway,sans-serif;
-    color: #e7e7eb;
-    `;
-
-    const TopBtns = styled.div`
-    margin-top: 40px;
-    text-align: right;
-    margin-left: 87%;
-    display: flex;
-    `;
-
-    const Btn = styled.div`
-    border-radius: 100%;
-    padding: 15px;
-    font-family: Raleway,sans-serif;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 14px;
-    margin-right: 38px;
-    color: #110e3c;
-    text-align: center;
-    background: #585676;
-    cursor: pointer;
-    `;
-
-    const ProgresBar = styled.div`
-    width: 80%;
-    height: 7px;
-    background: #fff;
-    border-radius: 50px;
-    overflow: hidden;
-    margin: auto;
-    margin-bottom: 20px;
-    `;
-
-    const BarFill = styled.div`
-    height: 8px;
-    background: #ffec65;
-    width: 81%;
-    `;
-
-return (
-    <Container>
-        <TopBtns>
-            <Btn>°C</Btn>
-            <Btn>°F</Btn>
-        </TopBtns>
-
-        <HightlightsTitle>Today's Hightlights </HightlightsTitle>
-        <HightlightsDetails>
-            <WindStatus>
-                <WindStatusTitel> Wind status </WindStatusTitel>
-                <WindData>{todaysForecast?.hour[0].wind_mph}<WindDesc>mph</WindDesc></WindData>
-            </WindStatus>
-
-            <Humidity>
-                <HumidityTitel>Humidity</HumidityTitel>
-                <HumidityData>{todaysForecast?.hour[0].humidity}<HumidityDesc>%</HumidityDesc>
-                <ProgresBar>
-                <BarFill data-v-042b7e1e=""></BarFill>
-                </ProgresBar>
-                </HumidityData>
-            </Humidity>
-
-            <Visibility>
-                <VisibilityTitel>Visibility</VisibilityTitel> 
-                <VisibilityData>{todaysForecast?.hour[0].vis_miles}<VisibilityDesc>miles</VisibilityDesc>
-                </VisibilityData>
-                </Visibility>
-
-            <AirPressure>
-                <AirPressureTitel>Air Pressure </AirPressureTitel>
-                <AirPressureData>{todaysForecast?.hour[0].pressure_mb}<AirPressureDesc>hPa</AirPressureDesc>
-                </AirPressureData>
-                </AirPressure>
-        </HightlightsDetails>
-    </Container>
-    )
+  todaysForecast?: ForecastEachDay;
 }
 
-export default Content;
+const Container = styled.div`
+  position: absolute;
+  width: 70%;
+  right: 0;
+  top: 0;
+  background: #100e1d;
+  min-height: 100vh;
+  color: white;
+`;
+
+const HightlightsDetails = styled.div`
+  width: 80%;
+  text-align: left;
+  margin: 25px auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+`;
+
+const DaysContent = styled.div`
+  width: 80%;
+  margin: 30px auto;
+  min-height: 177px;
+  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 150px);
+  gap: 12px;
+`;
+
+const HightlightsTitle = styled.div`
+  font-weight: 600;
+  font-size: 21px;
+  color: #e7e7eb;
+  margin-left: 120px;
+`;
+
+export const Content: React.FC<Props> = () => {
+  const [weatherData, setWeatherData] = React.useState<any>(null);
+  const weatherDataList = useSelector<any>((state) => state.weatherData);
+  const unitTemp = useSelector<any>((state) => state.unit);
+
+  React.useEffect(() => {
+    if (weatherDataList !== null) {
+      setWeatherData(weatherDataList);
+    }
+  }, [weatherDataList]);
+
+  const todaysHightlights = weatherData?.forecast.forecastday[0].hour[0];
+  const newForecastDay = weatherData?.forecast.forecastday.slice(1, 6);
+
+  return (
+    <Container>
+      <TemperatureUnitSelector />
+
+      <DaysContent>
+        {weatherData !== null &&
+          newForecastDay?.map((item: ForecastEachDay, id: number) => (
+            <DaysCard
+              key={id}
+              date={item.date}
+              icon={item.day.condition.icon}
+              maxTemp={
+                unitTemp === "C" ? item.day.maxtemp_c : item.day.maxtemp_f
+              }
+              minTemp={
+                unitTemp === "C" ? item.day.mintemp_c : item.day.mintemp_f
+              }
+            />
+          ))}
+      </DaysContent>
+
+      <HightlightsTitle>Today's Hightlights</HightlightsTitle>
+      <HightlightsDetails>
+        <HightlightsList
+          title="Wind Status"
+          data={todaysHightlights?.wind_mph}
+          unit="mph"
+          customElement={
+            <WindDirection windDirectionData={todaysHightlights?.wind_dir} />
+          }
+        />
+        <HightlightsList
+          title="Humidity"
+          data={todaysHightlights?.humidity}
+          unit="%"
+          customElement={
+            <HumidityPercent humidity={todaysHightlights?.humidity} />
+          }
+        />
+        <HightlightsList
+          title="Visibility"
+          data={todaysHightlights?.vis_miles}
+          unit="miles"
+        />
+        <HightlightsList
+          title="Air Pressure"
+          data={todaysHightlights?.pressure_mb}
+          unit="mb"
+        />
+      </HightlightsDetails>
+    </Container>
+  );
+};
